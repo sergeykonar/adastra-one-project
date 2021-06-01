@@ -1,5 +1,6 @@
 package com.example.imageapptest.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.imageapptest.R;
@@ -21,14 +23,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView wordsView;
-    private FloatingActionButton addWord;
+    @BindView(R.id.wordList) RecyclerView wordsView;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,21 +86,21 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        wordsView = view.findViewById(R.id.wordList);
-        addWord = view.findViewById(R.id.addWord);
-        addWord.setOnClickListener(addWordlistener);
+
+
+
+        ButterKnife.bind(this, view);
 
         return view;
     }
 
-    private View.OnClickListener addWordlistener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(getContext(), "FAB", Toast.LENGTH_LONG).show();
-            BottomAddFragment bottomAddFragment = new BottomAddFragment(getContext());
-            bottomAddFragment.setContentView(R.layout.add_word);
-            bottomAddFragment.show();
 
-        }
-    };
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.addWord)
+    void addWord(){
+        Toast.makeText(getContext(), "FAB", Toast.LENGTH_LONG).show();
+        BottomAddFragment bottomAddFragment = new BottomAddFragment(getContext());
+        bottomAddFragment.setContentView(R.layout.add_word);
+        bottomAddFragment.show();
+    }
 }

@@ -10,14 +10,20 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.bottomNavigationView) BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.homeFragment, R.id.aboutFragment).build();
 
         NavController navController = Navigation.findNavController(this, R.id.fragment);
@@ -25,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        // TODO: Create App to get images from NASA servers.
+        // TODO: Create App to get word definition servers.
         // TODO: / Android Support SDK / AndroidX (support Android SDK 21+)
 
 
