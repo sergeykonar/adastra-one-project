@@ -11,13 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.imageapptest.R;
 import com.example.imageapptest.model.Word;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
 
-    private List<Word> words;
-    public WordAdapter(List<Word> words) {
+    private List<Word> words = new LinkedList<>();
+    public WordAdapter() {
+
+    }
+
+    public void setWords(List<Word> words) {
         this.words = words;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -34,6 +40,9 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
+        if (words.isEmpty()){
+            return 0;
+        }
         return words.size();
     }
 
@@ -45,4 +54,5 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
             word = itemView.findViewById(R.id.word);
         }
     }
+
 }

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.imageapptest.MainActivity;
 import com.example.imageapptest.R;
 import com.example.imageapptest.adapters.WordAdapter;
 import com.example.imageapptest.api.WordApi;
 import com.example.imageapptest.api.RetroClient;
 import com.example.imageapptest.model.Word;
+import com.example.imageapptest.viewmodels.WordViewModel;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -38,6 +42,7 @@ public class HomeFragment extends Fragment {
 
     private List<Word> words;
 
+    private WordViewModel wordViewModel;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -56,19 +61,21 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        Word word = new Word();
-        Word word2 = new Word();
-        word.setWord("Test");
-        word2.setWord("Test2");
-        words = Arrays.asList(word, word2);
-
-        WordAdapter wordAdapter = new WordAdapter(words);
-
-
-
         unbinder = ButterKnife.bind(this, view);
+
+
+        WordAdapter wordAdapter = new WordAdapter();
         wordsView.setAdapter(wordAdapter);
+
+        wordViewModel = new ViewModelProvider(requireActivity()).get(WordViewModel.class);
+        wordViewModel.getWordsData().observe(requireActivity(), new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> words) {
+                wordAdapter.setWords(words);
+                Log.e(getTag(), "list updated");
+            }
+        });
+
         wordsView.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
@@ -78,9 +85,11 @@ public class HomeFragment extends Fragment {
     @OnClick(R.id.addWord)
     void addWord(){
         Toast.makeText(getContext(), "FAB", Toast.LENGTH_LONG).show();
-        BottomAddFragment bottomAddFragment = new BottomAddFragment(getContext());
-        bottomAddFragment.setContentView(R.layout.add_word);
-        bottomAddFragment.show();
+        BottomAddFragment bottomAddFragment = BottomAddFragment.newInstance();
+//        bottomAddFragment.setContentView(R.layout.add_word);
+//        bottomAddFragment.show();
+        bottomAddFragment.show(getParentFragmentManager(), "ADD");
+
     }
 
     @Override

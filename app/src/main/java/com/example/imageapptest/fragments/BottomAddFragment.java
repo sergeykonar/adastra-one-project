@@ -3,16 +3,27 @@ package com.example.imageapptest.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.example.imageapptest.MainActivity;
 import com.example.imageapptest.R;
+import com.example.imageapptest.adapters.WordAdapter;
 import com.example.imageapptest.api.RetroClient;
 import com.example.imageapptest.api.WordApi;
 import com.example.imageapptest.model.Word;
+import com.example.imageapptest.viewmodels.WordViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 
@@ -22,61 +33,38 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class BottomAddFragment extends BottomSheetDialog {
+public class BottomAddFragment extends BottomSheetDialogFragment {
 
+    @BindView(R.id.wordText) TextInputEditText wordText;
 
-    public BottomAddFragment(@NonNull Context context) {
-        super(context);
-
+    public static BottomAddFragment newInstance() {
+        return new BottomAddFragment();
     }
 
-    private void getApi(){
-        WordApi wordApi = RetroClient.getNasaApi();
-        Call<Word> call = wordApi.getMyJson("car");
-
-        call.enqueue(new Callback<Word>() {
-            @Override
-            public void onResponse(Call<Word> call, retrofit2.Response<Word> response) {
-                if(response.isSuccessful()){
-                    Log.e("SUCCESSFUL API", response.message());
-                    Word word = response.body();
-                    Log.e("RESPONSE", word.getWord());
-
-
-                }else {
-                    Log.e("ERROR OCCURRED", response.message());
-                    try {
-                        Log.e("MESSAGE",response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Word> call, Throwable t) {
-                Log.e("API FAILURE", t.getMessage());
-            }
-        });
-    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
 
 
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.add_word, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
+    }
+
     @OnClick(R.id.findBtn)
     void findWordDefinition(){
+        String mWord = wordText.getText().toString();
+
+        WordViewModel wordViewModel = new ViewModelProvider(requireActivity()).get(WordViewModel.class);
+        wordViewModel.getWord(mWord);
         dismiss();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
 
 }

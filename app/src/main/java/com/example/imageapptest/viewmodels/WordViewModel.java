@@ -19,4 +19,17 @@ public class WordViewModel extends AndroidViewModel {
         this.repository = new Repository(application);
         this.data = repository.getData();
     }
+
+    public MutableLiveData<List<Word>> getWordsData(){
+        return repository.getData();
+    }
+
+    public void insertWord(Word word){
+        repository.insertWord(word);
+    }
+
+    public void getWord(String mWord) {
+        repository.getWord(mWord);
+
+    }
 }
