@@ -1,6 +1,7 @@
 package com.example.imageapptest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -8,6 +9,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
+import com.example.imageapptest.viewmodels.WordViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;
@@ -40,5 +42,8 @@ public class MainActivity extends AppCompatActivity {
 //        • RecyclerView
 //        • ButterKnife (in case that you don't use MVVM with Data Binding / View Binding or Kotlin extensions)
 //        • Passing data between activities/fragment
+
+        WordViewModel wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
+
     }
 }

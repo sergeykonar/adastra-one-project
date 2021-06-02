@@ -14,7 +14,7 @@ public class RetroClient {
                 .build();
     }
 
-    public static NasaApi getNasaApi(){
-        return getInstance().create(NasaApi.class);
+    public static WordApi getNasaApi(){
+        return getInstance().create(WordApi.class);
     }
 }

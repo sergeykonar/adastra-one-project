@@ -6,7 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface NasaApi {
+public interface WordApi {
 
     String API_KEY = "a78f19fdbamshcf02621665fbdccp109ae7jsnb03720b7dcc8";
 

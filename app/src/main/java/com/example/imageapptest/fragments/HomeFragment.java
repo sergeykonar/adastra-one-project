@@ -4,28 +4,29 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.imageapptest.R;
-import com.example.imageapptest.api.NasaApi;
+import com.example.imageapptest.adapters.WordAdapter;
+import com.example.imageapptest.api.WordApi;
 import com.example.imageapptest.api.RetroClient;
 import com.example.imageapptest.model.Word;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -33,7 +34,9 @@ import retrofit2.Callback;
 public class HomeFragment extends Fragment {
 
     @BindView(R.id.wordList) RecyclerView wordsView;
+    public Unbinder unbinder;
 
+    private List<Word> words;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -45,52 +48,28 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-        getApi();
-
-
     }
 
-    private void getApi(){
-        NasaApi nasaApi = RetroClient.getNasaApi();
-        Call<Word> call = nasaApi.getMyJson("car");
 
-        call.enqueue(new Callback<Word>() {
-            @Override
-            public void onResponse(Call<Word> call, retrofit2.Response<Word> response) {
-                if(response.isSuccessful()){
-                    Log.e("SUCCESSFUL API", response.message());
-                    Word word = response.body();
-                    Log.e("RESPONSE", word.getWord());
-
-
-                }else {
-                    Log.e("ERROR OCCURRED", response.message());
-                    try {
-                        Log.e("MESSAGE",response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Word> call, Throwable t) {
-                Log.e("API FAILURE", t.getMessage());
-            }
-        });
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        Word word = new Word();
+        Word word2 = new Word();
+        word.setWord("Test");
+        word2.setWord("Test2");
+        words = Arrays.asList(word, word2);
+
+        WordAdapter wordAdapter = new WordAdapter(words);
 
 
-        ButterKnife.bind(this, view);
 
+        unbinder = ButterKnife.bind(this, view);
+        wordsView.setAdapter(wordAdapter);
+        wordsView.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -102,5 +81,11 @@ public class HomeFragment extends Fragment {
         BottomAddFragment bottomAddFragment = new BottomAddFragment(getContext());
         bottomAddFragment.setContentView(R.layout.add_word);
         bottomAddFragment.show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
