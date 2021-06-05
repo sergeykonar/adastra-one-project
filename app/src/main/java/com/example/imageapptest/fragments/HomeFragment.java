@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,10 +63,13 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-
-        WordAdapter wordAdapter = new WordAdapter();
+        WordAdapter wordAdapter = new WordAdapter(getContext());
         wordsView.setAdapter(wordAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(wordsView.getContext(),DividerItemDecoration.VERTICAL);
+        wordsView.addItemDecoration(dividerItemDecoration);
 
         wordViewModel = new ViewModelProvider(requireActivity()).get(WordViewModel.class);
         wordViewModel.getWordsData().observe(requireActivity(), new Observer<List<Word>>() {
@@ -76,7 +80,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        wordsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        wordsView.setLayoutManager(layoutManager);
         return view;
     }
 
