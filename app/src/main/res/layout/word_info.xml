@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <ListView
-        tools:listitem="@layout/word_info_item"
+        android:id="@+id/defInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="210dp" />
+        tools:layout_editor_absoluteY="210dp"
+        tools:listitem="@layout/word_info_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
