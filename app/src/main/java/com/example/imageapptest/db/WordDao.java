@@ -17,4 +17,6 @@ public interface WordDao {
     @Query("SELECT * FROM Word")
     List<Word> getAll();
 
+    @Query("DELETE FROM Word")
+    void deleteAll();
 }

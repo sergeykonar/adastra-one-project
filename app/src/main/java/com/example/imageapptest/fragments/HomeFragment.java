@@ -3,6 +3,9 @@ package com.example.imageapptest.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -70,7 +76,6 @@ public class HomeFragment extends Fragment {
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(wordsView.getContext(),DividerItemDecoration.VERTICAL);
         wordsView.addItemDecoration(dividerItemDecoration);
-
         wordViewModel = new ViewModelProvider(requireActivity()).get(WordViewModel.class);
         wordViewModel.getWordsData().observe(requireActivity(), new Observer<List<Word>>() {
             @Override
@@ -79,7 +84,6 @@ public class HomeFragment extends Fragment {
                 Log.e(getTag(), "list updated");
             }
         });
-
         wordsView.setLayoutManager(layoutManager);
         return view;
     }
@@ -88,10 +92,7 @@ public class HomeFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.addWord)
     void addWord(){
-        Toast.makeText(getContext(), "FAB", Toast.LENGTH_LONG).show();
         BottomAddFragment bottomAddFragment = BottomAddFragment.newInstance();
-//        bottomAddFragment.setContentView(R.layout.add_word);
-//        bottomAddFragment.show();
         bottomAddFragment.show(getParentFragmentManager(), "ADD");
 
     }
@@ -101,4 +102,10 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+
+
+
+
+
 }

@@ -75,4 +75,10 @@ public class Repository {
             }
         });
     }
+
+    public void deleteAll() {
+        WordDao wordDao = wordDatabase.wordDao();
+        wordDao.deleteAll();
+        wordsData.setValue(wordDao.getAll());
+    }
 }
