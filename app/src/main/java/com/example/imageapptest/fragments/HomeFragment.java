@@ -1,66 +1,111 @@
 package com.example.imageapptest.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.imageapptest.MainActivity;
 import com.example.imageapptest.R;
+import com.example.imageapptest.adapters.WordAdapter;
+import com.example.imageapptest.api.WordApi;
+import com.example.imageapptest.api.RetroClient;
+import com.example.imageapptest.model.Word;
+import com.example.imageapptest.viewmodels.WordViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    @BindView(R.id.wordList) RecyclerView wordsView;
+    public Unbinder unbinder;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private List<Word> words;
 
+    private WordViewModel wordViewModel;
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        WordAdapter wordAdapter = new WordAdapter(getContext());
+        wordsView.setAdapter(wordAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(wordsView.getContext(),DividerItemDecoration.VERTICAL);
+        wordsView.addItemDecoration(dividerItemDecoration);
+        wordViewModel = new ViewModelProvider(requireActivity()).get(WordViewModel.class);
+        wordViewModel.getWordsData().observe(requireActivity(), new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> words) {
+                wordAdapter.setWords(words);
+                Log.e(getTag(), "list updated");
+            }
+        });
+        wordsView.setLayoutManager(layoutManager);
+        return view;
     }
+
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.addWord)
+    void addWord(){
+        BottomAddFragment bottomAddFragment = BottomAddFragment.newInstance();
+        bottomAddFragment.show(getParentFragmentManager(), "ADD");
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
+
+
+
+
 }
